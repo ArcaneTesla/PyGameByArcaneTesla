@@ -6,7 +6,7 @@ direction = False
 isJump = False
 FPS = 60
 myStep = 10
-jumpCount = 10
+jumpCount = 8
 
 pygame.init()
 
@@ -66,30 +66,31 @@ block6Rect = pygame.Rect(1676, 579, block6.get_width(), block6.get_height())
 blocks.append((block6, block6Rect))
 
 
-def newPosition(direction, spriteX, spriteY):
+def newPosition(key_pressed, spriteX, spriteY):
     # Функция пересчитывает координаты новой позиции игрока и проверяет столкновения с блоками
     global myStep
     global jumpCount
     global isJump
-    if direction:
-        if direction[pygame.K_LEFT]:
+    pygame.display.update()
+    if key_pressed[pygame.K_LEFT]:
             spriteX -= myStep
-        elif direction[pygame.K_RIGHT]:
+    elif key_pressed[pygame.K_RIGHT]:
             spriteX += myStep
-        if not (isJump):
-            if direction[pygame.K_SPACE]:
-                isJump = True
-        else:
-            if jumpCount >= -10:
-                if jumpCount < 0:
-                    spriteY += (jumpCount ** 2) / 2
-                else:
-                    spriteY -= (jumpCount ** 2) / 2
-                jumpCount -= 1
+    if not (isJump):
+        if key_pressed[pygame.K_SPACE]:
+            isJump = True
+    else:
+        if jumpCount >= -10:
+            if jumpCount < 0:
+                spriteY += (jumpCount ** 2) / 2
             else:
-                isJump = False
-                jumpCount = 10
+                spriteY -= (jumpCount ** 2) / 2
+            jumpCount -= 1
+        else:
+            isJump = False
+            jumpCount = 8
     return spriteX, spriteY
+
 
 def collisionDetected():
     global blocks
@@ -116,9 +117,8 @@ def draw_Window():
 # Цикл игры
 MainCycle = True
 while MainCycle:
-    fpsClock.tick(FPS)  # Частота обновления экрана
+    fpsClock.tick(FPS) # Частота обновления экрана
     key_pressed = pygame.key.get_pressed()
-
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -134,9 +134,8 @@ while MainCycle:
 
     spriteRect = pygame.Rect(spriteX, spriteY, sprite.get_width(), sprite.get_height()) #Текущее место расположения игрока
     oldPos = (spriteX, spriteY) #Сохраняем старые координаты
-    spriteX, spriteY = newPosition(direction, spriteX, spriteY)  #Новые координаты
+    spriteX, spriteY = newPosition(key_pressed, spriteX, spriteY)  #Новые координаты
     spriteRectNew = pygame.Rect(spriteX, spriteY, sprite.get_width(), sprite.get_height()) #Новое место расположения картинки
-
     if collisionDetected():
         (spriteX, spriteY) = oldPos #Колизия
 
