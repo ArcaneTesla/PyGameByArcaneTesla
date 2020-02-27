@@ -3,8 +3,10 @@ FPS = 60  # кадров в сек
 
 # Переменные
 direction = False
+isJump = False
 FPS = 60
 myStep = 10
+jumpCount = 10
 
 pygame.init()
 
@@ -12,7 +14,8 @@ fpsClock = pygame.time.Clock()
 window = pygame.display.set_mode((0, 0), pygame.FULLSCREEN | pygame.HWSURFACE)
 
 background = pygame.image.load('sprite/BG.png')  # Фон
-sprite = pygame.image.load('sprite/1.png')  # Подвижная картинка
+sprit = pygame.image.load('sprite/1.png')  # Подвижная картинка
+sprite = pygame.transform.scale(sprit, (sprit.get_width() * 3, sprit.get_height() * 3))
 spaceship = pygame.image.load('sprite/ship.png')
 pygame.mixer.init()
 pygame.mixer.music.load("Test.mp3")
@@ -20,8 +23,8 @@ pygame.mixer.music.play()
 
 # Начальные координаты объектов
 
-spriteX = 500
-spriteY = 500
+spriteX = 474
+spriteY = 614
 spaceship_x = 200
 spaceship_y = 300
 spaceship_widht = 525
@@ -64,18 +67,28 @@ blocks.append((block6, block6Rect))
 
 
 def newPosition(direction, spriteX, spriteY):
-    # Функция пересчитывает координаты новой позиции подвижного объекта
-    # Проверяем столкновений со всеми блоками-границаи
+    # Функция пересчитывает координаты новой позиции игрока и проверяет столкновения с блоками
     global myStep
+    global jumpCount
+    global isJump
     if direction:
-        if direction[pygame.K_UP]:
-            spriteY -= myStep
-        elif direction[pygame.K_DOWN]:
-            spriteY += myStep
-        elif direction[pygame.K_LEFT]:
+        if direction[pygame.K_LEFT]:
             spriteX -= myStep
         elif direction[pygame.K_RIGHT]:
             spriteX += myStep
+        if not (isJump):
+            if direction[pygame.K_SPACE]:
+                isJump = True
+        else:
+            if jumpCount >= -10:
+                if jumpCount < 0:
+                    spriteY += (jumpCount ** 2) / 2
+                else:
+                    spriteY -= (jumpCount ** 2) / 2
+                jumpCount -= 1
+            else:
+                isJump = False
+                jumpCount = 10
     return spriteX, spriteY
 
 def collisionDetected():
@@ -98,7 +111,6 @@ def draw_Window():
         window.blit(block[0], (block[1].x, block[1].y))
 
     window.blit(sprite, (spriteRect.x, spriteRect.y))
-
     pygame.display.update()
 
 # Цикл игры
@@ -131,6 +143,3 @@ while MainCycle:
     draw_Window()# Рисуем всё на экране
 
 pygame.quit()
-
-
-
