@@ -4,9 +4,9 @@ FPS = 60  # кадров в сек
 # Переменные
 direction = False
 isJump = False
+jumpCount = 4
 FPS = 60
 myStep = 10
-jumpCount = 8
 
 pygame.init()
 
@@ -21,6 +21,7 @@ pygame.mixer.init()
 pygame.mixer.music.load("Test.mp3")
 pygame.mixer.music.play()
 
+
 # Начальные координаты объектов
 
 spriteX = 474
@@ -34,63 +35,35 @@ spaceshipScale = pygame.transform.scale(spaceship, (spaceship_widht * 3, spacesh
 
 # барьерные блоки
 
-blocks = []
-block1 = pygame.Surface((12, 138))
-block1.fill((255, 0, 0))
-block1Rect = pygame.Rect(1409, 453, block1.get_width(), block1.get_height())
-blocks.append((block1, block1Rect))
-#
-block2 = pygame.Surface((12, 270))
-block2.fill((0, 255, 0))
-block2Rect = pygame.Rect(455, 455, block2.get_width(), block2.get_height())
-blocks.append((block2, block2Rect))
-#
-block3 = pygame.Surface((1230, 12))
-block3.fill((0, 0, 255))
-block3Rect = pygame.Rect(455, 717, block3.get_width(), block3.get_height())
-blocks.append((block3, block3Rect))
+barriers = []
 
-block4 = pygame.Surface((966, 12))
-block4.fill((0, 244, 255))
-block4Rect = pygame.Rect(455, 453, block4.get_width(), block4.get_height())
-blocks.append((block4, block4Rect))
+barrier1 = pygame.Surface((12, 270))
+barrier1.fill((0, 0, 0))
+barrier1Rect = pygame.Rect(455, 455, barrier1.get_width(), barrier1.get_height())
+barriers.append((barrier1, barrier1Rect))
 
-block5 = pygame.Surface((279, 12))
-block5.fill((23, 22, 55))
-block5Rect = pygame.Rect(1409, 579, block5.get_width(), block5.get_height())
-blocks.append((block5, block5Rect))
+barrier2 = pygame.Surface((1230, 12))
+barrier2.fill((0, 0, 0))
+barrier2Rect = pygame.Rect(455, 717, barrier2.get_width(), barrier2.get_height())
+barriers.append((barrier2, barrier2Rect))
 
-block6 = pygame.Surface((12, 150))
-block6.fill((70, 55, 255))
-block6Rect = pygame.Rect(1676, 579, block6.get_width(), block6.get_height())
-blocks.append((block6, block6Rect))
+barrier3 = pygame.Surface((12, 150))
+barrier3.fill((0, 0, 0))
+barrier3Rect = pygame.Rect(1676, 579, barrier3.get_width(), barrier3.get_height())
+barriers.append((barrier3, barrier3Rect))
 
 
 def newPosition(key_pressed, spriteX, spriteY):
     # Функция пересчитывает координаты новой позиции игрока и проверяет столкновения с блоками
     global myStep
-    global jumpCount
     global isJump
-    pygame.display.update()
+    global jumpCount
+
     if key_pressed[pygame.K_LEFT]:
             spriteX -= myStep
     elif key_pressed[pygame.K_RIGHT]:
             spriteX += myStep
-    if not (isJump):
-        if key_pressed[pygame.K_SPACE]:
-            isJump = True
-    else:
-        if jumpCount >= -10:
-            if jumpCount < 0:
-                spriteY += (jumpCount ** 2) / 2
-            else:
-                spriteY -= (jumpCount ** 2) / 2
-            jumpCount -= 1
-        else:
-            isJump = False
-            jumpCount = 8
     return spriteX, spriteY
-
 
 def collisionDetected():
     global blocks
@@ -99,7 +72,7 @@ def collisionDetected():
     # Проверка столкновений со всеми блоками в массиве блоков
     for block in blocks:
         if spriteRectNew.colliderect(block[1]):
-            collisionDir = direction
+
             colFlag = True
     return colFlag
 
@@ -108,8 +81,8 @@ def draw_Window():
     window.blit(background, (0, 0))
     window.blit(spaceshipScale, (spaceship_x, spaceship_y))
 
-    for block in blocks:
-        window.blit(block[0], (block[1].x, block[1].y))
+    for barrier in barriers:
+        window.blit(barrier[0], (barrier[1].x, barrier[1].y))
 
     window.blit(sprite, (spriteRect.x, spriteRect.y))
     pygame.display.update()
@@ -127,17 +100,20 @@ while MainCycle:
         if key_pressed[pygame.K_ESCAPE]:
             pygame.quit()
             sys.exit()
-        if event.type == pygame.KEYDOWN:
-            direction = pygame.key.get_pressed()
-        if event.type == pygame.KEYUP:
-            direction = False
+
 
     spriteRect = pygame.Rect(spriteX, spriteY, sprite.get_width(), sprite.get_height()) #Текущее место расположения игрока
+
     oldPos = (spriteX, spriteY) #Сохраняем старые координаты
+
     spriteX, spriteY = newPosition(key_pressed, spriteX, spriteY)  #Новые координаты
+
     spriteRectNew = pygame.Rect(spriteX, spriteY, sprite.get_width(), sprite.get_height()) #Новое место расположения картинки
-    if collisionDetected():
-        (spriteX, spriteY) = oldPos #Колизия
+
+    for barrier in barriers:
+        if spriteRectNew.colliderect(barrier[1]):
+            (spriteX, spriteY) = oldPos
+            print('Колизия')#Колизия
 
     draw_Window()# Рисуем всё на экране
 
