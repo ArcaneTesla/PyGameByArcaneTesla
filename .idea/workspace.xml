@@ -163,7 +163,14 @@
       <option name="project" value="LOCAL" />
       <updated>1583233920746</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="начало создания меню ивентов">
+      <created>1583407217270</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1583407217270</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -183,6 +190,7 @@
     <MESSAGE value="Тест колизии2" />
     <MESSAGE value="Тест колизии2(Исправленое управление)" />
     <MESSAGE value="Колизия(готово)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Колизия(готово)" />
+    <MESSAGE value="начало создания меню ивентов" />
+    <option name="LAST_COMMIT_MESSAGE" value="начало создания меню ивентов" />
   </component>
 </project>

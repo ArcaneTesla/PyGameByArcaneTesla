@@ -4,9 +4,13 @@ FPS = 60  # кадров в сек
 # Переменные
 direction = False
 isJump = False
+iteractionFlag = False
 jumpCount = 4
 FPS = 60
-myStep = 10
+myStep = 20
+OxStatus = 100
+CorpStatus = 100
+ReactorStatus = 100
 
 pygame.init()
 
@@ -17,14 +21,16 @@ background = pygame.image.load('sprite/BG.png')  # Фон
 sprit = pygame.image.load('sprite/1.png')  # Подвижная картинка
 sprite = pygame.transform.scale(sprit, (sprit.get_width() * 3, sprit.get_height() * 3))
 spaceship = pygame.image.load('sprite/ship.png')
+HUD = pygame.image.load('sprite/HUD.png')
 pygame.mixer.init()
 pygame.mixer.music.load("Dreamstate Logic - Earthbound.mp3")
 pygame.mixer.music.play()
 pygame.font.SysFont('arial', 36)
-f1 = pygame.font.Font(None, 70)
+f1 = pygame.font.Font(None, 80)
 text1 = f1.render('Ничего не происходит', 1, (255, 255, 255))
-text2 = 1
-iteractionFlag = False
+OxStatusText = f1.render(str(OxStatus), 1, (255, 255, 255))
+CorpStatusText = f1.render(str(CorpStatus), 1, (255, 255, 255))
+ReactorStatusText = f1.render(str(ReactorStatus), 1, (255, 255, 255))
 
 # Начальные координаты объектов
 i = 1
@@ -83,13 +89,18 @@ def newPosition(key_pressed, spriteX, spriteY):
 def draw_Window():
 
     window.blit(background, (0, 0))
+    window.blit(HUD, (0, 0))
     window.blit(spaceshipScale, (spaceship_x, spaceship_y))
     window.blit(interaction, (1570, 614))
-    window.blit(text1, (100, 50))
+    window.blit(text1, (600, 50))
+    window.blit(sprite, (spriteRect.x, spriteRect.y))
+    window.blit(OxStatusText, (660, 1000))
+    window.blit(CorpStatusText, (875, 1000))
+    window.blit(ReactorStatusText, (1090, 1000))
+
     for barrier in barriers:
         window.blit(barrier[0], (barrier[1].x, barrier[1].y))
 
-    window.blit(sprite, (spriteRect.x, spriteRect.y))
     pygame.display.update()
 
 
@@ -128,6 +139,9 @@ while MainCycle:
         text1 = f1.render('Нажмите E', 1, (255, 255, 255))
     else:
         text1 = f1.render('Ничего не происходит', 1, (255, 255, 255))
+
+    if key_pressed[pygame.K_DOWN]:
+        OxStatus = OxStatus - 1
 
     draw_Window()# Рисуем всё на экране
 
