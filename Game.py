@@ -28,7 +28,6 @@ pygame.mixer.music.play()
 pygame.font.SysFont('arial', 36)
 f1 = pygame.font.Font(None, 80)
 text1 = f1.render('Ничего не происходит', 1, (255, 255, 255))
-OxStatusText = f1.render(str(OxStatus), 1, (255, 255, 255))
 CorpStatusText = f1.render(str(CorpStatus), 1, (255, 255, 255))
 ReactorStatusText = f1.render(str(ReactorStatus), 1, (255, 255, 255))
 
@@ -139,9 +138,20 @@ while MainCycle:
         text1 = f1.render('Нажмите E', 1, (255, 255, 255))
     else:
         text1 = f1.render('Ничего не происходит', 1, (255, 255, 255))
-
+    OxStatusText = f1.render(str(OxStatus), 1, (255, 255, 255))
     if key_pressed[pygame.K_DOWN]:
-        OxStatus = OxStatus - 1
+        OxStatus -= 1
+        if OxStatus <= 0:
+            OxStatus = 0
+    if key_pressed[pygame.K_UP]:
+        OxStatus += 1
+        if OxStatus >= 100:
+            OxStatus = 100
+    if OxStatus == 0:
+        text1 = f1.render('Топливо реактора закончилось', 1, (255, 255, 255))
+
+
+
 
     draw_Window()# Рисуем всё на экране
 
