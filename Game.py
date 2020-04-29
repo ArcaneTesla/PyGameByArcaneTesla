@@ -29,6 +29,8 @@ spaceship = pygame.image.load('sprite/ship.png').convert()
 HUD = pygame.image.load('sprite/HUD.png').convert()
 icon = pygame.image.load('icon.png').convert()
 quest = pygame.image.load('sprite/quest.png').convert()
+flame = pygame.image.load('sprite/Flame.png').convert()
+flame2 = pygame.image.load('sprite/Flame2.png').convert()
 
 #Музыка
 pygame.mixer.init()
@@ -48,7 +50,7 @@ KeyStatus = False
 # Начальные координаты объектов
 i = 1
 spriteX = 474
-spriteY = 614
+spriteY = 615
 spaceship_x = 200
 spaceship_y = 300
 
@@ -104,6 +106,7 @@ def draw_Window():
     window.blit(HUD, (0, 0))
     window.blit(spaceship, (spaceship_x, spaceship_y))
     window.blit(text1, (20, 900))
+
     if spriteRectNew.colliderect(interactionRect):
         window.blit(interaction, (1574, 642))
 
@@ -112,12 +115,18 @@ def draw_Window():
     window.blit(CorpStatusText, (875, 1000))
     window.blit(ReactorStatusText, (1090, 1000))
 
+    if BackAnim == False:
+        window.blit(flame2, (173, 450))
+        window.blit(flame2, (173, 600))
+    else:
+        window.blit(flame, (176, 450))
+        window.blit(flame, (176, 600))
+
     if iteractionFlag == True:
         window.blit(quest, (200, 200))
 
     pygame.display.set_icon(icon)
     pygame.display.update()
-
 
 # Цикл игры
 MainCycle = True
